@@ -10,14 +10,15 @@ def fill_list(files: list):
     for item in files:
         with open(item['address']) as f:
             data = f.read()
-            item['length'] = len(data.split('\n'))
-            for line in data.split('\n'):
+            lines = data.split('\n')
+            item['length'] = len(lines)
+            for line in lines:
                 item['content'] += [line+'\n']
                 
 def add_file(address: str, files: list):
-    files.sort(key=lambda item: item['length'])
+    files_sorted = sorted(files, key=lambda item: item['length'])
     with open(address, 'w') as f:
-        for item in files:
+        for item in files_sorted:
             f.write(f"{item['name']}\n{item['length']}\n")
             f.writelines(item['content'])
         

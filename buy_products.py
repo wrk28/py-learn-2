@@ -1,11 +1,12 @@
 from pprint import pprint
 
 
-def fill_book(address:str, cook_book: dict):
+def fill_book(address:str) -> dict:
+   cook_book = {}
    with open(address) as f:
     lines = [line.strip() for line in f]
     index = 0
-    while index <= len(lines):
+    while index < len(lines):
         dish = lines[index]
         number_ingredients = int(lines[index+1])
         cook_book[lines[index]] = []
@@ -18,8 +19,9 @@ def fill_book(address:str, cook_book: dict):
             ingredients = lines[i].split(' | ')
             cook_book[dish] += [{'ingredient_name': ingredients[0], 'quantity': int(ingredients[1]), 'measure': ingredients[2]}]
         index += end_dish_indx
+    return cook_book
 
-def get_shop_list_by_dishes(dishes: list, person_count: int, cook_book) -> list:
+def get_shop_list_by_dishes(dishes: list, person_count: int, cook_book) -> dict:
     shop_list = {}
     for item in dishes:
         ingredients = cook_book[item]
@@ -29,14 +31,13 @@ def get_shop_list_by_dishes(dishes: list, person_count: int, cook_book) -> list:
                 value = shop_list[ingredient_name]
                 value['quantity'] += ingr['quantity'] * person_count
             else:
-                shop_list[ingredient_name] = {'quantity': ingr['quantity'] * person_count}
+                shop_list[ingredient_name] = {'quantity': ingr['quantity'] * person_count, 'measure': ingr['measure']}
     return shop_list
 
 if __name__ == '__main__':
-    cook_book ={}
-    fill_book(r"./files/recipes.txt", cook_book)
+    cook_book = fill_book(r"./files/recipes.txt")
     pprint(cook_book)
     print()
     
-    shop_list = get_shop_list_by_dishes(['Запеченный картофель', 'Омлет'],2, cook_book)
+    shop_list = get_shop_list_by_dishes(['Запеченный картофель', 'Омлет'], 2, cook_book)
     pprint(shop_list)
